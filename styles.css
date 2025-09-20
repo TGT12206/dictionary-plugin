@@ -1,0 +1,83 @@
+:root {
+	--remove-button-color: rgb(116, 26, 26);
+}
+.vbox {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+}
+.hbox {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+}
+.pointer-hover:hover {
+	cursor: pointer;
+}
+:is(button.remove-button, .remove-button) {
+	background-color: var(--remove-button-color);
+}
+:is(button.exit-button, .exit-button) {
+	background-color: var(--remove-button-color);
+	align-self: flex-end;
+}
+.tgt-lang-main {
+	width: 100%;
+	height: 100%;
+}
+:is(.tgt-lang-main, .tgt-lang-main :is(div, select, button, input, textarea)) {
+	padding: 0.5vh;
+	gap: 0.5vh;
+	font-family: var(--font-text);
+	font-size: var(--font-text-size);
+	border-radius: 1vh;
+	border-style: solid;
+	border-width: 2px;
+	border-color: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+}
+.tgt-lang-main button:hover {
+	cursor: pointer;
+}
+.tgt-lang-main :is(.tgt-lang-display, textarea, input) {
+	width: 100%;
+}
+.tgt-lang-display {
+	height: 100%;
+	overflow: scroll;
+}
+:is(.tgt-lang-word-list, .tgt-lang-irregulars-list) {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-auto-rows: fit-content(100%);
+	overflow: scroll;
+}
+.tgt-lang-inflection-div {
+	width: 100%;
+}
+.tgt-lang-category {
+	width: 100%;
+}
+.tgt-lang-irregulars-list-wrapper {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	transform: translate(-5%, -5%);
+	background-color: var(--background-primary-alt);
+	width: 90%;
+	height: 90%;
+	overflow: scroll;
+}
+.tgt-lang-irregulars-list {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-auto-rows: fit-content(100%);
+	overflow: scroll;
+}
+.tgt-lang-word {
+	height: fit-content;
+	align-self: flex-start;
+}
