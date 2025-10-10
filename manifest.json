@@ -1,9 +1,9 @@
 {
-	"id": "tgt-conlang-tools",
-	"name": "TGT-Conlang Tools",
+	"id": "tgt-dictionary",
+	"name": "TGT-Dictionary",
 	"version": "0.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Conlanging tools such as a dictionary.",
+	"description": "Adds TGT-Lang files that are dictionaries.",
 	"author": "TGT12206",
 	"authorUrl": "n/a",
 	"fundingUrl": "n/a",
