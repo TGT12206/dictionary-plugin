@@ -1,7 +1,7 @@
 {
 	"id": "tgt-dictionary",
 	"name": "TGT-Dictionary",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Adds TGT-Lang files that are dictionaries.",
 	"author": "TGT12206",
