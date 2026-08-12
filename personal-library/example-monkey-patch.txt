@@ -1,0 +1,55 @@
+/** 
+ * export/import tells typescript that this file
+ * should be treated as its own scope instead of a global scope
+ * 
+ * since this file has nothing in it yet, gemini added this
+ * to make sure the file is a module (has its own scope) instead
+ * of a script (global scope)
+ * 
+ * this is because with some setups, declare global will
+ * throw an error if the scope is already global
+ */
+export {};
+
+/**
+ * declare global tells typescript that this block of code
+ * should be given the global scope, even though the file
+ * has its own scope
+ * 
+ * however, this temporary global scope can't actually
+ * run code/give functions their behavior/assing values,
+ * it can only define things and give them a name
+ */
+declare global {
+    /**
+     * Here we tell the compiler that our custom
+     * properties/functions exist, what their name is,
+     * and what they return, but not their actual
+     * behavior
+     */
+    interface HTMLElement {
+        createDiv(className?: string): HTMLDivElement;
+    }
+}
+
+/**
+ * This allows us to add functionality to the properties/functions
+ * we named earlier
+ */
+Object.defineProperty(HTMLElement.prototype, 'createDiv', {
+    value: function(this: HTMLElement, className?: string): HTMLDivElement {
+        const div = document.createElement('div');
+        if (className !== undefined) div.className = className;
+        this.appendChild(div);
+        return div;
+    },
+    enumerable: false, // Prevents it from appearing in loops
+    writable: false, // Prevents other people from changing what this function does
+    /**
+     * Allows people to change any of the above descriptors
+     * later (enumerable and writable, maybe others)
+     * 
+     * Also allows people to delete the property
+     */
+    configurable: true
+});
