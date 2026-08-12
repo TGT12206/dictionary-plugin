@@ -156,7 +156,7 @@ export class String_Option_Editor extends StringLineEditor {
                 await this.ChangeValue(view, str);
                 await this.UpdateAfterSelecting(view, str);
             },
-            this.options
+            () => this.options
         );
     }
     protected async UpdateAfterSelecting(view: View, str: string) {}

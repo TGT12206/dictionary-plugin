@@ -92,13 +92,19 @@ export class DictView extends TextFileView {
 	private ShowLayoutTab(div: HTMLDivElement) {
 		div.empty();
 		div.className = `tgt-lang-display tgt-lang-box ${VBOX}`;
-		HTMLHelper.CreateNewTextDiv(div, 'Font Name:');
+		HTMLHelper.CreateNewTextDiv(div, 'Language font:');
 		const fontName = div.createEl('input', { type: 'text', value: this.dict.font } );
 		this.registerDomEvent(fontName, 'change', () => {
 			this.dict.font = fontName.value;
 			this.requestSave();
 		});
-		fontName.focus();
+
+		HTMLHelper.CreateNewTextDiv(div, '# of results per row:');
+		const num = div.createEl('input', { type: 'number', value: `${this.dict.num_per_line}` } );
+		this.registerDomEvent(num, 'change', () => {
+			this.dict.num_per_line = parseInt(num.value);
+			this.requestSave();
+		});
 
 		this.ShowDictionaryColorEditor(div);
 
@@ -264,6 +270,7 @@ export class DictView extends TextFileView {
 			SetValue: async (newValue: Map<string, Entry>) => { this.dict.entries = newValue },
 			Save: async () => { this.requestSave() }
 		});
+		l.itemsPerLine = this.dict.num_per_line;
 		l.dict = this.dict;
 		l.search = find_results;
 		l.edit_word = (entry: MapEntry<string, Entry>) => { this.EditWord(div, entry) }

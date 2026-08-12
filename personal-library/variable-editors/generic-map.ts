@@ -14,8 +14,33 @@ export abstract class GenericMapEditor<K, V, mapType extends GenericMap<K, V>> e
     mapDiv: HTMLDivElement;
     addButton: Optional<HTMLButtonElement>;
 
+    private num_items_per_line: number;
     /** If this is > 1, then the entries are arranged in a grid */
-    itemsPerLine: number;
+    get itemsPerLine(): number {
+        return this.num_items_per_line;
+    }
+    set itemsPerLine(i: number) {
+        if (i <= 0) return;
+
+        this.num_items_per_line = i;
+
+        if (!this.mapDiv) return;
+
+        if (this.addButton){
+            this.addButton.detach();
+            this.num_items_per_line === 1 ? this.mapDiv.after(this.addButton) : this.mapDiv.before(this.addButton);
+        }
+        if (i === 1) {
+            this.mapDiv.classList.remove('grid');
+            return;
+        }
+
+        this.mapDiv.classList.add('grid');
+        this.mapDiv.style.setProperty(
+            '--num-lines',
+            'repeat(' + i + ', 1fr)'
+        );
+    }
 
     entryEditors: Map<K, GenericMapEntryEditor<K, V>>;
 
@@ -51,7 +76,7 @@ export abstract class GenericMapEditor<K, V, mapType extends GenericMap<K, V>> e
     protected override Initialize_Variables(args: VariableEditorSetupInfo<mapType>): void {
         super.Initialize_Variables(args);
         this.volatileEntries = true;
-        this.itemsPerLine = 1;
+        this.num_items_per_line = 1;
         this.entryEditors = new Map();
         this.displayedKeys = [];
         this.onEntryCreation = new UpdateTrigger(this);
@@ -74,13 +99,8 @@ export abstract class GenericMapEditor<K, V, mapType extends GenericMap<K, V>> e
         this.mapDiv.classList.add('outer-div');
         this.mapDiv.classList.add('scroll');
 
-        if (this.isGrid) {
-            this.mapDiv.classList.add('grid');
-            this.mapDiv.style.setProperty(
-                '--num-lines',
-                'repeat(' + this.itemsPerLine + ', 1fr)'
-            );
-        }
+        // triggers code to change the css based on the variable
+        this.itemsPerLine = this.num_items_per_line;
     }
 
     protected override Create_HTML_Functionality(view: View): void {

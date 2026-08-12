@@ -5,13 +5,13 @@ export class Option_Suggest extends AbstractInputSuggest<string> {
         view: View,
         public inputEl: HTMLInputElement,
         public OnSelect: (str: string) => Promise<void>,
-        public options: string[]
+        public getOptions: () => string[]
     ) {
         super(view.app, inputEl);
     }
     protected getSuggestions(query: string): string[] | Promise<string[]> {
         const fuzzyMatcher = prepareFuzzySearch(query);
-        return this.options
+        return this.getOptions()
             .map(o => {
                 const result = fuzzyMatcher(o);
                 return result ? { file: o, score: result.score, matches: result.matches } : null;

@@ -8,7 +8,6 @@ import { String_Array_Editor, String_Entry_Editor } from "./string-array-editor"
 import { String_Option_Editor, StringLineEditor } from "personal-library/variable-editors/primitive";
 import { Optional } from "personal-library/variable-editors/shorthand";
 import { CreateNewTextDiv } from "personal-library/html-utility";
-import { UpdateTrigger } from "personal-library/variable-editors/update-request";
 
 export class Word_Map_Editor extends MapEditor<Entry> {
     dict: Dict;
@@ -17,7 +16,6 @@ export class Word_Map_Editor extends MapEditor<Entry> {
 	protected Initialize_Variables(args: VariableEditorSetupInfo<Map<string, Entry>>): void {
 		super.Initialize_Variables(args);
 		this.isVertical = true;
-        this.itemsPerLine = 5;
 	}
 	override CreateNewEntryEditor(args: VariableEditorSetupInfo<MapEntry<string, Entry>>) {
 		return new Word_Entry_Editor(args);

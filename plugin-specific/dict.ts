@@ -3,6 +3,7 @@ import { Set_U } from "personal-library/utility/set";
 
 export class Dict {
     public font: string = '';
+    public num_per_line: number = 5;
     public tx: string = '#ffffff';
     public bd: string = '#8a5cf5';
     public bg: string = '#000000';
@@ -82,7 +83,11 @@ export class Dict {
             .filter(r => {
                 if (query === '') return true;
                 if (r.contains(query)) return true;
-                return (<Entry> this.entries.get(r)).definitions.contains(query);
+                const e = <Entry> this.entries.get(r);
+                for (const d of e.definitions) {
+                    if (d.contains(query)) return true;
+                }
+                return false;
             });
     }
     private check_candidate(c: string, categories: string[] | null) {

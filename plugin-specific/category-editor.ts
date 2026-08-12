@@ -71,7 +71,7 @@ export class Category_Searcher extends ArrayEditor<string> {
         this.div.classList.add('wide');
     }
     override CreateNewEntryEditor(args: VariableEditorSetupInfo<MapEntry<number, string>>): ArrayEntryEditor<string> {
-        return new Category_Entry_Editor(args);
+        return new Searched_Category(args);
     }
     override CreateNewEntry(): MapEntry<number, string> {
         return new MapEntry(this.value.length, '');
@@ -87,6 +87,8 @@ export class Searched_Category extends ArrayEntryEditor<string> {
     override parent: Category_Searcher;
     protected override Initialize_DOM_Elements() {
         super.Initialize_DOM_Elements();
+        this.keyEditorDiv?.remove();
+        this.keyEditorDiv = null;
         this.div.classList.add('story-line-editor');
         this.div.classList.add('wide');
         this.entryValueEditorDiv = this.div.createDiv();
@@ -98,10 +100,7 @@ export class Searched_Category extends ArrayEntryEditor<string> {
     }
     protected override CreateEntryValueEditor(args: VariableEditorSetupInfo<string>): VariableEditor<string> {
         const e = new String_Option_Editor(args);
-        e.options.length = 0;
-        for (const c of this.parent.dict.categories) {
-            e.options.push(c);
-        }
+        e.options = this.parent.dict.categories;
         return e;
     }
 }
