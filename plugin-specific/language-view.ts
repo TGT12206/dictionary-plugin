@@ -161,6 +161,7 @@ export class DictView extends TextFileView {
 
 	//#region Word Categories Tab
 	private ShowWordCategoriesTab(div: HTMLDivElement) {
+		div.empty();
 		HTMLHelper.CreateNewTextDiv(div, 'Word Categories');
 		const e = new Category_Array_Editor({
 			value: this.dict.categories,
@@ -179,7 +180,7 @@ export class DictView extends TextFileView {
 	private ShowSearchTab(div: HTMLDivElement) {
 		div.empty();
 		div.className = 'tgt-lang-display vbox';
-		const searchBar = div.createDiv('vbox');
+		const searchBar = div.createDiv('vbox outer-div');
 		const listDiv = div.createDiv();
 
 		this.CreateSearchUI(div, searchBar, listDiv);
@@ -293,8 +294,21 @@ export class DictView extends TextFileView {
 			SetValue: async (newValue: Entry) => { entry.value = newValue },
 			Save: async () => { this.requestSave() }
 		});
+        
+		const dl_btn = div.createEl('button');
+        dl_btn.classList.add('remove-button');
+        setIcon(dl_btn, 'trash-2');
+
 		e.key_editor = k;
+		k.dict = this.dict;
+		e.dict = this.dict;
 		k.Build(this);
 		e.Build(this);
+
+		this.registerDomEvent(dl_btn, 'click', async () => {
+			this.dict.remove(entry.key);
+			this.requestSave();
+			this.ShowSearchTab(div);
+		});
 	}
 }

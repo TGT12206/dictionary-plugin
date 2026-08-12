@@ -43,9 +43,11 @@ export class Dict {
     rename(o: string, n: string) {
         for (const t of this.tokenize_entry(o)) {
             this.index.get(t)?.delete(o);
-            this.index.get(t)?.add(n);
         }
         Map_U.Move(this.entries, o, n);
+        for (const t of this.tokenize_entry(n)) {
+            this.index.get(t)?.delete(n);
+        }
     }
     async re_index(w: string, change: () => Promise<void>) {
         const old = this.tokenize_entry(w);
@@ -105,14 +107,72 @@ export class Dict {
     }
     static fromJSON(json: string) {
         const data = JSON.parse(json);
-        const output = Object.assign(new Dict(), data);
+        const output: Dict = Object.assign(new Dict(), data);
         output.entries = new Map(data.entries);
+        const categoryOrder = output.CategoryOrder;
+        for (const e of output.entries.entries()) {
+            e[1].categories.sort(categoryOrder);
+        }
         output.index = new Map(data.index);
         for (const e of output.index.entries()) {
             output.index.set(e[0], new Set(e[1]));
         }
         return output;
     }
+    get WordOrder(): (a: string, b: string) => number {
+		const char_value = new Map<string, number>();
+		for (let i = 0; i < this.order.length; i++) {
+			char_value.set(this.order[i], i);
+		}
+
+		const order_fn = (a: string, b: string) => {
+			let num1 = char_value.get(a);
+			let num2 = char_value.get(b);
+
+			num1 = num1 === undefined ? -1 : num1;
+			num2 = num2 === undefined ? -1 : num2;
+
+			if (num1 === -1 && num2 === -1) {
+				return a < b ? -1 : a === b ? 0 : 1;
+			}
+
+			return num1 - num2;
+		}
+
+		return (a: string, b: string) => {
+			const arr1 = a.split('');
+			const arr2 = b.split('');
+			const aIsSmaller = a.length < b.length;
+			const min = aIsSmaller ? a.length : b.length;
+			for (let i = 0; i < min; i++) {
+				const currentDifference = order_fn(arr1[i], arr2[i]);
+				if (currentDifference != 0) {
+					return currentDifference;
+				}
+			}
+			return aIsSmaller ? -1 : b.length === min ? 0 : 1;
+		}
+	}
+    get CategoryOrder(): (a: string, b: string) => number {
+		const char_value = new Map<string, number>();
+		for (let i = 0; i < this.categories.length; i++) {
+			char_value.set(this.categories[i], i);
+		}
+
+		return (a: string, b: string) => {
+			let num1 = char_value.get(a);
+			let num2 = char_value.get(b);
+
+			num1 = num1 === undefined ? -1 : num1;
+			num2 = num2 === undefined ? -1 : num2;
+
+			if (num1 === -1 && num2 === -1) {
+				return a < b ? -1 : a === b ? 0 : 1;
+			}
+
+			return num1 - num2;
+		}
+	}
 }
 export class Entry {
     categories: string[];

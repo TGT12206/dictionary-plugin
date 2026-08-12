@@ -15,6 +15,7 @@ export class Category_Array_Editor extends ArrayEditor<string> {
     }
     protected Initialize_DOM_Elements(): void {
         super.Initialize_DOM_Elements();
+        this.div.classList.add('tgt-lang-box');
         this.div.classList.add('wide');
     }
     override CreateNewEntryEditor(args: VariableEditorSetupInfo<MapEntry<number, string>>): ArrayEntryEditor<string> {
@@ -39,7 +40,6 @@ export class Category_Entry_Editor extends ArrayEntryEditor<string> {
     override entryValueEditor: StringLineEditor;
     protected override Initialize_DOM_Elements() {
         super.Initialize_DOM_Elements();
-        this.div.classList.add('story-line-editor');
         this.div.classList.add('wide');
         this.keyEditorDiv = this.div.createDiv();
         this.entryValueEditorDiv = this.div.createDiv();

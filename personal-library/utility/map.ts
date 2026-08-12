@@ -10,6 +10,7 @@ export class Map_U {
         if (m.has(n)) throw new Error('Cannot move to a key that is already used');
         const v = m.get(o);
         if (v === undefined) throw new Error('Cannot move from a key that is not used');
+        m.delete(o);
         m.set(n, v);
     }
 }

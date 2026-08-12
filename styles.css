@@ -31,8 +31,11 @@
 	border-radius: 1vh;
 	border-style: solid;
 	transition-duration: 500ms;
+	color: var(--tx);
+	border-color: var(--bd);
+	background-color: var(--bg);
 }
-.tgt-lang-box:is(:is(div, select, option, button):not(:is(.remove-button, .exit-button))) {
+:is(.tgt-lang-box, .tgt-lang-main :is(input, select, option, button):not(:is(.remove-button, .exit-button))) {
 	padding: 0.5vh;
 	gap: 0.5vh;
 	font-family: var(--font-text);

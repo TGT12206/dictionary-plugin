@@ -8,6 +8,7 @@ import { String_Array_Editor, String_Entry_Editor } from "./string-array-editor"
 import { String_Option_Editor, StringLineEditor } from "personal-library/variable-editors/primitive";
 import { Optional } from "personal-library/variable-editors/shorthand";
 import { CreateNewTextDiv } from "personal-library/html-utility";
+import { UpdateTrigger } from "personal-library/variable-editors/update-request";
 
 export class Word_Map_Editor extends MapEditor<Entry> {
     dict: Dict;
@@ -77,9 +78,9 @@ export class Word_Entry_Editor extends MapEntryEditor<Entry> {
 
         let categories = '';
         for (const c of this.value.value.categories) {
-            categories += `${c} `;
+            categories += `, ${c}`;
         }
-        CreateNewTextDiv(this.div, categories.trim());
+        CreateNewTextDiv(this.div, categories.substring(2), 'tgt-lang-box');
 
         for (const d of this.value.value.definitions) {
             CreateNewTextDiv(this.div, d);
@@ -87,6 +88,7 @@ export class Word_Entry_Editor extends MapEntryEditor<Entry> {
 	}
 	protected override Create_HTML_Functionality(view: View): void {
 		super.Create_HTML_Functionality(view);
+        this.word_div.style.fontFamily = this.dict.font;
         view.registerDomEvent(this.word_div, 'click', () => { navigator.clipboard.writeText(this.key); });
         view.registerDomEvent(this.edit_btn, 'click', () => { this.edit_word(this.value) });
 	}
@@ -96,8 +98,31 @@ export class Word_Entry_Editor extends MapEntryEditor<Entry> {
 }
 export class KeyEditor extends StringLineEditor {
     dict: Dict;
+    validityIndicator: HTMLDivElement;
+    protected override Initialize_Variables(args: VariableEditorSetupInfo<string>): void {
+        super.Initialize_Variables(args);
+        this.eventName = 'change';
+    }
+    protected override Initialize_DOM_Elements(): void {
+        this.div.classList.add('tgt-lang-box')
+        super.Initialize_DOM_Elements();
+        this.validityIndicator = this.div.createDiv();
+    }
+    protected override Create_HTML_Functionality(view: View): void {
+        super.Create_HTML_Functionality(view);
+        view.registerDomEvent(this.input, 'input', () => { this.UpdateValidityIndicator } );
+        this.UpdateValidityIndicator();
+    }
+    async ChangeValue(view: View, newValue: string): Promise<void> {
+        await super.ChangeValue(view, newValue);
+        this.UpdateValidityIndicator();
+    }
     protected IsValidValue(newValue: string): boolean {
         return !this.dict.entries.has(newValue);
+    }
+    protected UpdateValidityIndicator() {
+        const unique = this.value === this.input.value || this.IsValidValue(this.input.value);
+        this.validityIndicator.textContent = unique ? 'is a unique word' : 'already exists';
     }
 }
 export class Entry_Editor extends VariableEditor<Entry> {
